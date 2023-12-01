@@ -13,7 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install dependencies
-      run: lein deps
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4.0.0
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+    - name: Install Clojure
+      run: |
+        curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh
+        chmod +x linux-install.sh
+        sudo ./linux-install.sh
     - name: Run tests
-      run: lein test
+      run: clojure -X:test :dirs '["src"]' :patterns '[".*"]'
